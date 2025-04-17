@@ -80,9 +80,17 @@ const startMesasage = (template: string, persona?: string) => ({
   conversation_config: {
     template_id: template,
     template_variables: {
-      timezone: "Europe/London",
+      timezone: "America/New_York",
       persona,
+      // You can add a system message here to control the agent's behavior
+      // This overrides the default system message in the template
+      context:
+        "You are a kind and helpful AI assistant that helps the user with document management. You have access to a document through a tool called replace_document_content. When users ask you to write or update the document, use this tool to replace the content.",
     },
+  },
+  // Enable debug mode to see the system prompt and LLM interactions
+  debug: {
+    llm: true,
   },
   // Add tools
   tools: [
@@ -106,8 +114,9 @@ const startMesasage = (template: string, persona?: string) => ({
     {
       type: "function",
       function: {
-        name: "set_document_content",
-        description: "Set the content of the document",
+        name: "replace_document_content",
+        description:
+          "Replace the content of the document. This replaces the existing content.",
         parameters: {
           type: "object",
           properties: {

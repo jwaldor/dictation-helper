@@ -70,8 +70,8 @@ export function ToolHandler() {
             }
           }, 500); // Small delay to simulate API call
         }
-        // Handle set_document_content tool
-        else if (data.function.name === 'set_document_content') {
+        // Handle replace_document_content tool
+        else if (data.function.name === 'replace_document_content') {
           const { content } = data.function.arguments || {};
 
           // Update the document content in the store
