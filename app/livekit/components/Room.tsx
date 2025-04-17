@@ -56,7 +56,7 @@ export function Room({
         className="flex flex-col container m-auto gap-4 p-4"
         action={formAction}
       >
-        <h1>Livekit example</h1>
+        <h1>Dictation Helper</h1>
         <select
           name="template"
           className="select select-bordered w-full max-w-x"
@@ -75,6 +75,7 @@ export function Room({
           name="persona"
           placeholder="Describe your persona"
           maxLength={500}
+          hidden={true}
         />
         <button className="btn btn-success btn-lg w-full" type="submit" aria-busy={pending}>
           {pending ? (

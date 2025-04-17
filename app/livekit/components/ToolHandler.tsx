@@ -77,6 +77,19 @@ export function ToolHandler() {
           // Update the document content in the store
           if (content !== undefined) {
             setContent(content);
+
+            // Asynchronously send the content to the API endpoint for logging
+            // This won't block the UI since we're not awaiting the response
+            fetch('/api/log-document', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ content }),
+            }).catch(error => {
+              // Just log any errors to the console, don't block the UI
+              console.error('Error sending document content to API:', error);
+            });
           }
 
           // Set the last response for display
