@@ -29,6 +29,10 @@ export function Room({
     FormData
   >((_, formData: FormData) => start(formData), null);
 
+  // Get the second persona in the list for default selection
+  const personaEntries = Object.entries(personas);
+  const defaultPersona = personaEntries.length > 1 ? personaEntries[1][0] : personaEntries[0]?.[0] || "";
+
   if (!state || !state.success) {
     return (
       <form
@@ -40,12 +44,12 @@ export function Room({
           name="template"
           className="select select-bordered w-full max-w-x"
           required
-          defaultValue=""
+          defaultValue={defaultPersona}
         >
           <option value="" disabled>
             Select a template
           </option>
-          {Object.entries(personas).map(([id, persona]) => (
+          {personaEntries.map(([id, persona]) => (
             <option key={id} value={id} label={persona.name} />
           ))}
         </select>
@@ -55,11 +59,11 @@ export function Room({
           placeholder="Describe your persona"
           maxLength={500}
         />
-        <button className="btn" type="submit" aria-busy={pending}>
+        <button className="btn btn-success btn-lg w-full" type="submit" aria-busy={pending}>
           {pending ? (
             <span className="loading loading-spinner" />
           ) : (
-            'Start LiveKit Session'
+            'Begin Session'
           )}
         </button>
         {!!state?.error && (
@@ -77,6 +81,8 @@ export function Room({
     <LiveKitRoom
       serverUrl={livekitURL}
       token={livekitToken}
+      // Set audio to true to unmute the microphone by default
+      audio={true}
       onDisconnected={() => {
         // TODO find a better way to reset
         window.location.reload();
@@ -84,7 +90,7 @@ export function Room({
       className="flex flex-col h-full"
     >
       <Transcript sessionId={sessionID} />
-      <DocumentWithTranscript sessionId={sessionID} />
+      <DocumentWithTranscript />
       <div className="my-6">
         <ToolHandler />
       </div>
@@ -100,12 +106,10 @@ function Transcript({ sessionId }: { sessionId: string }) {
   return <TranscriptContainer transcripts={transcriptGroups} />;
 }
 
-function DocumentWithTranscript({ sessionId }: { sessionId: string }) {
-  const transcriptGroups = useTranscript(sessionId);
-
+function DocumentWithTranscript() {
   return (
     <div className="my-6">
-      <Document transcriptGroups={transcriptGroups} />
+      <Document />
     </div>
   );
 }
