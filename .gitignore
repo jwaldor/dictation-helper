@@ -1,0 +1,6 @@
+public/js/pcm-audio-worklet.min.js
+.env
+node_modules
+.env.local
+.env.*
+.next
