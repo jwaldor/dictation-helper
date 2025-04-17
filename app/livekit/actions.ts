@@ -85,7 +85,7 @@ const startMesasage = (template: string, persona?: string) => ({
       // You can add a system message here to control the agent's behavior
       // This overrides the default system message in the template
       context:
-        "You are a kind and helpful AI assistant that helps the user with writing and editing a document.",
+        "You are a kind and helpful AI assistant that helps the user with writing and editing a document through dictation.",
     },
   },
   // Enable debug mode to see the system prompt and LLM interactions
