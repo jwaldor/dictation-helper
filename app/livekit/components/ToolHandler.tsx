@@ -17,7 +17,7 @@ interface ToolInvocation {
 export function ToolHandler() {
   const [toolInvocations, setToolInvocations] = useState<ToolInvocation[]>([]);
   const [lastResponse, setLastResponse] = useState<string | null>(null);
-  const { setContent } = useDocumentStore();
+  const { content, setContent } = useDocumentStore();
 
   // This is the correct way to use useDataChannel in LiveKit
   // It takes a callback function that receives data channel messages
@@ -89,6 +89,33 @@ export function ToolHandler() {
               id: data.id,
               status: 'ok',
               content: 'Document content has been updated successfully.',
+            };
+
+            if (dataChannel) {
+              // Convert the JSON string to a Uint8Array before sending
+              const encoder = new TextEncoder();
+              const jsonString = JSON.stringify(response);
+              const data = encoder.encode(jsonString);
+              dataChannel.send(data, {});
+              console.log('Sent tool response:', response);
+            }
+          }, 500); // Small delay to simulate API call
+        }
+        // Handle view_document_content tool
+        else if (data.function.name === 'view_document_content') {
+          // Get the current document content from the store
+          const documentContent = content || 'The document is currently empty.';
+
+          // Set the last response for display
+          setLastResponse(`Retrieved document content`);
+
+          // Send the response back to the Flow API
+          setTimeout(() => {
+            const response = {
+              message: 'ToolResult',
+              id: data.id,
+              status: 'ok',
+              content: documentContent,
             };
 
             if (dataChannel) {

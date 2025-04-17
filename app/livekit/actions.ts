@@ -85,7 +85,7 @@ const startMesasage = (template: string, persona?: string) => ({
       // You can add a system message here to control the agent's behavior
       // This overrides the default system message in the template
       context:
-        "You are a kind and helpful AI assistant that helps the user with document management. You have access to a document through a tool called replace_document_content. When users ask you to write or update the document, use this tool to replace the content.",
+        "You are a kind and helpful AI assistant that helps the user with writing and editing a document.",
     },
   },
   // Enable debug mode to see the system prompt and LLM interactions
@@ -126,6 +126,19 @@ const startMesasage = (template: string, persona?: string) => ({
             },
           },
           required: ["content"],
+        },
+      },
+    },
+    {
+      type: "function",
+      function: {
+        name: "view_document_content",
+        description:
+          "Enables you to view the content of the document that the user sees.",
+        parameters: {
+          type: "object",
+          properties: {},
+          required: [],
         },
       },
     },
