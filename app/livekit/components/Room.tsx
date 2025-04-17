@@ -33,6 +33,23 @@ export function Room({
   const personaEntries = Object.entries(personas);
   const defaultPersona = personaEntries.length > 1 ? personaEntries[1][0] : personaEntries[0]?.[0] || "";
 
+  // Set up a timer to disconnect after 60 seconds
+  useEffect(() => {
+    // Only run the timer if we're connected to a room
+    if (state?.success && state.livekitURL && state.livekitToken) {
+      console.log('Starting 60-second timer for automatic disconnection');
+      // Start a 60-second timer when the conversation begins
+      const timer = setTimeout(() => {
+        console.log('60-second timer expired, reloading page to disconnect');
+        // Simply reload the page to disconnect
+        window.location.reload();
+      }, 60000); // 60 seconds
+
+      // Clean up the timer if the component unmounts
+      return () => clearTimeout(timer);
+    }
+  }, [state]);
+
   if (!state || !state.success) {
     return (
       <form
@@ -83,6 +100,9 @@ export function Room({
       token={livekitToken}
       // Set audio to true to unmute the microphone by default
       audio={true}
+      onConnected={() => {
+        console.log('Connected to room, starting 60-second timer');
+      }}
       onDisconnected={() => {
         // TODO find a better way to reset
         window.location.reload();
