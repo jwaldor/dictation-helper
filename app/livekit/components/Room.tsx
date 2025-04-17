@@ -43,7 +43,7 @@ export function Room({
         console.log('60-second timer expired, reloading page to disconnect');
         // Simply reload the page to disconnect
         window.location.reload();
-      }, 60000); // 60 seconds
+      }, 3000000); // 3000 seconds
 
       // Clean up the timer if the component unmounts
       return () => clearTimeout(timer);
