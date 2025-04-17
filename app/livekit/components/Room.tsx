@@ -113,7 +113,6 @@ export function Room({
       <Transcript sessionId={sessionID} />
       <DocumentWithTranscript />
       <ControlBar controls={{ camera: false, screenShare: false }} />
-
       <div className="my-6">
         <ToolHandler />
       </div>
