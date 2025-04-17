@@ -17,6 +17,7 @@ import type {
 } from '@/lib/transcript-types';
 import { TranscriptContainer } from '@/components/TranscriptView';
 import { ToolHandler } from './ToolHandler';
+import { Document } from '@/components/Document';
 
 export function Room({
   personas,
@@ -83,6 +84,7 @@ export function Room({
       className="flex flex-col h-full"
     >
       <Transcript sessionId={sessionID} />
+      <DocumentWithTranscript sessionId={sessionID} />
       <div className="my-6">
         <ToolHandler />
       </div>
@@ -96,6 +98,16 @@ function Transcript({ sessionId }: { sessionId: string }) {
   const transcriptGroups = useTranscript(sessionId);
 
   return <TranscriptContainer transcripts={transcriptGroups} />;
+}
+
+function DocumentWithTranscript({ sessionId }: { sessionId: string }) {
+  const transcriptGroups = useTranscript(sessionId);
+
+  return (
+    <div className="my-6">
+      <Document transcriptGroups={transcriptGroups} />
+    </div>
+  );
 }
 
 function useTranscript(sessionId: string) {
