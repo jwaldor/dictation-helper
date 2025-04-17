@@ -1,4 +1,5 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { persist, PersistStorage } from "zustand/middleware";
 
 interface DocumentState {
   content: string;
@@ -7,10 +8,43 @@ interface DocumentState {
   clearContent: () => void;
 }
 
-export const useDocumentStore = create<DocumentState>((set) => ({
-  content: '',
-  setContent: (content: string) => set({ content }),
-  appendContent: (text: string) => 
-    set((state) => ({ content: state.content + text })),
-  clearContent: () => set({ content: '' }),
-}));
+const storage: PersistStorage<DocumentState> = {
+  getItem: (name) => {
+    try {
+      const str = localStorage.getItem(name);
+      return str ? JSON.parse(str) : null;
+    } catch (e) {
+      return null;
+    }
+  },
+  setItem: (name, value) => {
+    try {
+      localStorage.setItem(name, JSON.stringify(value));
+    } catch (e) {
+      // Ignore errors
+    }
+  },
+  removeItem: (name) => {
+    try {
+      localStorage.removeItem(name);
+    } catch (e) {
+      // Ignore errors
+    }
+  },
+};
+
+export const useDocumentStore = create<DocumentState>()(
+  persist(
+    (set) => ({
+      content: "",
+      setContent: (content: string) => set({ content }),
+      appendContent: (text: string) =>
+        set((state: DocumentState) => ({ content: state.content + text })),
+      clearContent: () => set({ content: "" }),
+    }),
+    {
+      name: "document-storage",
+      storage,
+    }
+  )
+);
