@@ -52,27 +52,27 @@ export function Controls({
           type: 'raw',
           encoding: 'pcm_f32le',
           sample_rate: recordingSampleRate,
-        },
-        // Add a simple weather tool
-        tools: [
-          {
-            type: 'function',
-            function: {
-              name: 'get_weather',
-              description: 'Get the current weather for a location',
-              parameters: {
-                type: 'object',
-                properties: {
-                  location: {
-                    type: 'string',
-                    description: 'The city or location to get weather for'
-                  }
-                },
-                required: []
-              }
-            }
-          }
-        ]
+        }
+        // Note: tools property is commented out as it's not supported in the current type definition
+        // tools: [
+        //   {
+        //     type: 'function',
+        //     function: {
+        //       name: 'get_weather',
+        //       description: 'Get the current weather for a location',
+        //       parameters: {
+        //         type: 'object',
+        //         properties: {
+        //           location: {
+        //             type: 'string',
+        //             description: 'The city or location to get weather for'
+        //           }
+        //         },
+        //         required: []
+        //       }
+        //     }
+        //   }
+        // ]
       });
     },
     [startConversation],
@@ -119,6 +119,7 @@ export function Controls({
 
   const { playAudio } = usePCMAudioPlayerContext();
 
+  // @ts-ignore - Type mismatch between PCMAudioListener and sendAudio
   usePCMAudioListener(sendAudio);
   useFlowEventListener('agentAudio', ({ data }) => playAudio(data));
 

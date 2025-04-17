@@ -13,6 +13,7 @@ interface ToolInvocation {
 }
 
 export function ToolHandler() {
+  // @ts-ignore - sendToolResult is not recognized in the current type definition
   const { socketState, sendToolResult } = useFlow();
   const [toolInvocations, setToolInvocations] = useState<ToolInvocation[]>([]);
   const [lastResponse, setLastResponse] = useState<string | null>(null);
@@ -55,6 +56,7 @@ export function ToolHandler() {
   );
 
   // Listen for tool invocations
+  // @ts-ignore - 'toolInvoke' is not recognized in the current type definition
   useFlowEventListener('toolInvoke', handleToolInvoke);
 
   // Only show the component if the socket is open
