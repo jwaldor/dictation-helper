@@ -1,7 +1,7 @@
 'use client';
 
 import { useDataChannel } from '@livekit/components-react';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import Card from '@/components/Card';
 import { useDocumentStore } from '@/store/documentStore';
 
