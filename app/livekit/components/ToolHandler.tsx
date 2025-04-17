@@ -3,6 +3,7 @@
 import { useDataChannel } from '@livekit/components-react';
 import { useCallback, useState } from 'react';
 import Card from '@/components/Card';
+import { useDocumentStore } from '@/store/documentStore';
 
 interface ToolInvocation {
   id: string;
@@ -16,6 +17,7 @@ interface ToolInvocation {
 export function ToolHandler() {
   const [toolInvocations, setToolInvocations] = useState<ToolInvocation[]>([]);
   const [lastResponse, setLastResponse] = useState<string | null>(null);
+  const { setContent } = useDocumentStore();
 
   // This is the correct way to use useDataChannel in LiveKit
   // It takes a callback function that receives data channel messages
@@ -39,7 +41,7 @@ export function ToolHandler() {
           },
         ]);
 
-        // Handle the weather tool
+        // Handle tools
         if (data.function.name === 'get_weather') {
           const { location } = data.function.arguments || {};
 
@@ -56,6 +58,37 @@ export function ToolHandler() {
               id: data.id,
               status: 'ok',
               content: weatherContent,
+            };
+
+            if (dataChannel) {
+              // Convert the JSON string to a Uint8Array before sending
+              const encoder = new TextEncoder();
+              const jsonString = JSON.stringify(response);
+              const data = encoder.encode(jsonString);
+              dataChannel.send(data, {});
+              console.log('Sent tool response:', response);
+            }
+          }, 500); // Small delay to simulate API call
+        }
+        // Handle set_document_content tool
+        else if (data.function.name === 'set_document_content') {
+          const { content } = data.function.arguments || {};
+
+          // Update the document content in the store
+          if (content !== undefined) {
+            setContent(content);
+          }
+
+          // Set the last response for display
+          setLastResponse(`Document content updated`);
+
+          // Send the response back to the Flow API
+          setTimeout(() => {
+            const response = {
+              message: 'ToolResult',
+              id: data.id,
+              status: 'ok',
+              content: 'Document content has been updated successfully.',
             };
 
             if (dataChannel) {

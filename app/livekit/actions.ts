@@ -84,7 +84,7 @@ const startMesasage = (template: string, persona?: string) => ({
       persona,
     },
   },
-  // Add a simple weather tool
+  // Add tools
   tools: [
     {
       type: "function",
@@ -100,6 +100,23 @@ const startMesasage = (template: string, persona?: string) => ({
             },
           },
           required: [],
+        },
+      },
+    },
+    {
+      type: "function",
+      function: {
+        name: "set_document_content",
+        description: "Set the content of the document",
+        parameters: {
+          type: "object",
+          properties: {
+            content: {
+              type: "string",
+              description: "The content to set in the document",
+            },
+          },
+          required: ["content"],
         },
       },
     },
