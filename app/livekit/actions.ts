@@ -11,7 +11,10 @@ export type StartLivekitResponse =
     }
   | { success: false; error: string };
 
-export async function start(formData: FormData): Promise<StartLivekitResponse> {
+export async function start(
+  formData: FormData,
+  documentContent: string
+): Promise<StartLivekitResponse> {
   try {
     const template = formData.get("template")?.toString();
     if (!template) {
@@ -38,7 +41,7 @@ export async function start(formData: FormData): Promise<StartLivekitResponse> {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
         },
-        body: JSON.stringify(startMesasage(template, persona)),
+        body: JSON.stringify(startMesasage(template, documentContent, persona)),
       }
     );
 
@@ -75,7 +78,11 @@ export async function start(formData: FormData): Promise<StartLivekitResponse> {
   }
 }
 
-const startMesasage = (template: string, persona?: string) => ({
+const startMesasage = (
+  template: string,
+  documentContent: string,
+  persona?: string
+) => ({
   message: "StartConversation",
   conversation_config: {
     template_id: template,
@@ -84,8 +91,9 @@ const startMesasage = (template: string, persona?: string) => ({
       persona,
       // You can add a system message here to control the agent's behavior
       // This overrides the default system message in the template
-      context:
-        "You are a kind and helpful AI assistant that helps the user with writing and editing a document through dictation.",
+      context: `You are a kind and helpful AI assistant that helps the user with writing and editing a document through dictation.
+        To enable the user to make the desired dictation, call the "replace_document_content" function with appropriate content to set the document to based on what the user has said.
+        The initial content of the document is: ${documentContent}`,
     },
   },
   // Enable debug mode to see the system prompt and LLM interactions

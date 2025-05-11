@@ -18,16 +18,18 @@ import type {
 import { TranscriptContainer } from '@/components/TranscriptView';
 import { ToolHandler } from './ToolHandler';
 import { Document } from '@/components/Document';
+import { useDocumentStore } from '@/store/documentStore';
 
 export function Room({
   personas,
 }: {
   personas: Awaited<ReturnType<typeof fetchPersonas>>;
 }) {
+  const { content } = useDocumentStore();
   const [state, formAction, pending] = useActionState<
     StartLivekitResponse | null,
     FormData
-  >((_, formData: FormData) => start(formData), null);
+  >((_, formData: FormData) => start(formData, content), null);
 
   // Get the second persona in the list for default selection
   const personaEntries = Object.entries(personas);
@@ -162,6 +164,7 @@ function useTranscript(sessionId: string) {
     };
 
     transcriptManager.addEventListener('update', handleUpdate);
+
     return () => {
       transcriptManager.removeEventListener('update', handleUpdate);
     };
